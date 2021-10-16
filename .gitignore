@@ -2,4 +2,7 @@
 build/
 debug/
 dist/
+private/
+Makefile-genesis.properties
+Makefile-local-free.mk
 settings.json

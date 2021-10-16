@@ -14,7 +14,16 @@
 #define BUTTON_PRESSED(n) (SW##n == 0)
 #define TURN_ON_LED(n) LED##n = 1
 #define TURN_OFF_LED(n) LED##n = 0
+#define FLASH_LED(n, duration) \
+    TURN_ON_LED(n);            \
+    __delay_ms(duration);      \
+    TURN_OFF_LED(n)
+
 //#define NELEMS(x) (sizeof(x) / sizeof((x)[0]))
+#define EOS '\0'
+#define DOT '.'
+#define DASH '-'
+#define WORD_SEPARATOR ' '
 
 #include "xc.h"      // Microchip XC8 compiler include file
 #include "stdint.h"  // Include integer definitions
@@ -22,7 +31,17 @@
 #include "UBMP4.h"   // Include UBMP4 constants and functions
 //#include "morse.h"
 
-#define UNIT_LENGTH_MS 500
+void makeSound(unsigned int cycles, unsigned int period)
+{
+    for (unsigned int c = 0; c < cycles; c++)
+    {
+        BEEPER = !BEEPER;
+        for (unsigned int p = 0; p < period; p++)
+            ;
+    }
+}
+
+#define UNIT_LENGTH_MS 300
 /*
 const char *CHAR2MORSE = {".-", "-...", "-.-.", "-..", ".", "..-.", "--.",
                           "....", "..", ".---", "-.-", ".-..", "--", "-.", "---",
@@ -44,8 +63,10 @@ enum senderState
     Transmitting
 };
 enum senderState currentSenderState = Transmitting;
-char *message = ".-";
+
 #define MAX_MESSAGE_LENGTH 100
+char message[MAX_MESSAGE_LENGTH];
+unsigned int currentMessageIndex = 0;
 
 void transmitDot()
 {
@@ -67,6 +88,32 @@ void transmitWordSeparator()
 {
     __delay_ms(UNIT_LENGTH_MS * 2);
 }
+void resetMessage()
+{
+    currentMessageIndex = 0;
+    for (int i; i < MAX_MESSAGE_LENGTH; i++)
+        message[i] = EOS;
+}
+void checkForSenderStateChange()
+{
+    if (BUTTON_PRESSED(2))
+    {
+        switch (currentSenderState)
+        {
+        case Transmitting:
+            currentSenderState = AcceptingInput;
+            break;
+        case AcceptingInput:
+            currentSenderState = Transmitting;
+            break;
+        }
+        resetMessage();
+        FLASH_LED(4, UNIT_LENGTH_MS);
+        FLASH_LED(5, UNIT_LENGTH_MS);
+        // Make sound
+        makeSound(500, 100);
+    }
+}
 
 void processMode(enum modeType mode)
 {
@@ -83,20 +130,45 @@ void processMode(enum modeType mode)
         switch (currentSenderState)
         {
         case AcceptingInput:
-            break;
-        case Transmitting:
-        {
-            for (int i = 0; i < MAX_MESSAGE_LENGTH; i++)
+            if (currentMessageIndex < MAX_MESSAGE_LENGTH)
             {
-                char code = message[i];
-                if (code != '\0')
+                if (BUTTON_PRESSED(3))
+                {
+                    message[currentMessageIndex++] = DOT;
+                    FLASH_LED(4, UNIT_LENGTH_MS);
+                }
+                else if (BUTTON_PRESSED(4))
+                {
+                    message[currentMessageIndex++] = DASH;
+                    FLASH_LED(5, UNIT_LENGTH_MS);
+                }
+                else if (BUTTON_PRESSED(5))
+                {
+                    message[currentMessageIndex++] = WORD_SEPARATOR;
+                    FLASH_LED(6, UNIT_LENGTH_MS);
+                }
+            }
+            else
+            {
+                // When the max length is reach, send the message
+                currentSenderState = Transmitting;
+                currentMessageIndex = 0;
+                // Make sound
+                makeSound(600, 100);
+                makeSound(600, 100);
+            }
+        case Transmitting:
+            if (currentMessageIndex < MAX_MESSAGE_LENGTH)
+            {
+                char code = message[currentMessageIndex];
+                if (code != EOS)
                 {
                     switch (code)
                     {
-                    case '.':
+                    case DOT:
                         transmitDot();
                         break;
-                    case '-':
+                    case DASH:
                         transmitDash();
                         break;
                     default:
@@ -104,12 +176,15 @@ void processMode(enum modeType mode)
                         break;
                     }
                     transmitCharSeparator();
+                    currentMessageIndex++;
                 }
                 else
-                    break;
+                    currentMessageIndex = 0;
             }
+            else
+                currentMessageIndex = 0;
         }
-        }
+        checkForSenderStateChange();
         break;
     case Diagnostic:
         TURN_ON_LED(3);
@@ -118,7 +193,7 @@ void processMode(enum modeType mode)
     }
 }
 
-void processModeToggles()
+void checkForModeChange()
 {
     if (BUTTON_PRESSED(2) && BUTTON_PRESSED(5))
     {
@@ -165,7 +240,7 @@ int main(void)
     while (1)
     {
         processMode(currentMode);
-        processModeToggles();
+        checkForModeChange();
         checkForReset();
     }
 }
@@ -179,15 +254,12 @@ void __interrupt() isr()
 
             if (IOCBFbits.IOCBF7 == 1)
             {
-                /*
-            TURN_ON_LED(6);
-            IOCBFbits.IOCBF7 = 0;
-            BEEPER = 1;
-            for (int i = 0; i < 200; i++)
-                ;
-            BEEPER = 0;
-            */
-                processModeToggles();
+                TURN_ON_LED(6);
+                IOCBFbits.IOCBF7 = 0;
+                BEEPER = 1;
+                for (int i = 0; i < 200; i++)
+                    ;
+                BEEPER = 0;
             }
     }
 }
