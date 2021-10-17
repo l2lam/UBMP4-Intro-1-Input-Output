@@ -9,7 +9,7 @@ Students or anyone interested in writing simple programs for the Microchip PIC16
 
 # User Interface
 
-SW1 is reserved for resetting the boarding into boot-loader mode.
+SW1 is reserved for resetting the UBMP4 device into boot-loader mode.
 
 ## Program Modes
 
@@ -29,8 +29,11 @@ The program starts in Sender mode. Users toggle between modes by simultaneously 
 Sender mode has 2 sub-modes (states):
 
 1. Accepting Input - lets the user input the morse code message
+
    > Users input a DOT using SW3; a DASH using SW4; and a letter boundary using SW5
+
    > Users can end the message and automatically switch to Transmitting by pressing SW3 and SW4 simultaneously
+
 2. Transmitting - repeated sends the message
 
 The program starts in the Accepting Input state. Users toggle between states by pressing SW2
