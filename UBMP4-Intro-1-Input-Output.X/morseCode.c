@@ -18,6 +18,12 @@
     TURN_ON_LED(n);            \
     __delay_ms(duration);      \
     TURN_OFF_LED(n)
+#define FLASH_2_LEDS(first, second, duration) \
+    TURN_ON_LED(first);                       \
+    TURN_ON_LED(second);                      \
+    __delay_ms(duration);                     \
+    TURN_OFF_LED(first);                      \
+    TURN_OFF_LED(second)
 
 //#define NELEMS(x) (sizeof(x) / sizeof((x)[0]))
 #define EOS '\0'
@@ -31,13 +37,18 @@
 #include "UBMP4.h"   // Include UBMP4 constants and functions
 //#include "morse.h"
 
-void makeSound(unsigned int cycles, unsigned int period)
+void makeSound(unsigned int cycles, unsigned int period, unsigned int repeat)
 {
-    for (unsigned int c = 0; c < cycles; c++)
+    for (unsigned int i = 0; i < repeat; i++)
     {
-        BEEPER = !BEEPER;
-        for (unsigned int p = 0; p < period; p++)
-            ;
+        for (unsigned int c = 0; c < cycles; c++)
+        {
+            BEEPER = !BEEPER;
+            for (unsigned int p = 0; p < period; p++)
+                ;
+        }
+        if (repeat > 1)
+            __delay_ms(300);
     }
 }
 
@@ -64,7 +75,7 @@ enum senderState
 };
 enum senderState currentSenderState = Transmitting;
 
-#define MAX_MESSAGE_LENGTH 100
+#define MAX_MESSAGE_LENGTH 3
 char message[MAX_MESSAGE_LENGTH];
 unsigned int currentMessageIndex = 0;
 
@@ -102,16 +113,16 @@ void checkForSenderStateChange()
         {
         case Transmitting:
             currentSenderState = AcceptingInput;
+            FLASH_2_LEDS(4, 6, UNIT_LENGTH_MS);
+            makeSound(500, 100, 2);
             break;
         case AcceptingInput:
             currentSenderState = Transmitting;
+            FLASH_2_LEDS(5, 6, UNIT_LENGTH_MS);
+            makeSound(800, 100, 3);
             break;
         }
         resetMessage();
-        FLASH_LED(4, UNIT_LENGTH_MS);
-        FLASH_LED(5, UNIT_LENGTH_MS);
-        // Make sound
-        makeSound(500, 100);
     }
 }
 
@@ -130,33 +141,33 @@ void processMode(enum modeType mode)
         switch (currentSenderState)
         {
         case AcceptingInput:
-            if (currentMessageIndex < MAX_MESSAGE_LENGTH)
+            if (currentMessageIndex >= MAX_MESSAGE_LENGTH || (BUTTON_PRESSED(3) && BUTTON_PRESSED(4)))
             {
-                if (BUTTON_PRESSED(3))
-                {
-                    message[currentMessageIndex++] = DOT;
-                    FLASH_LED(4, UNIT_LENGTH_MS);
-                }
-                else if (BUTTON_PRESSED(4))
-                {
-                    message[currentMessageIndex++] = DASH;
-                    FLASH_LED(5, UNIT_LENGTH_MS);
-                }
-                else if (BUTTON_PRESSED(5))
-                {
-                    message[currentMessageIndex++] = WORD_SEPARATOR;
-                    FLASH_LED(6, UNIT_LENGTH_MS);
-                }
-            }
-            else
-            {
-                // When the max length is reach, send the message
+                // When the max length is reach or user wants to send, then send the message
                 currentSenderState = Transmitting;
                 currentMessageIndex = 0;
-                // Make sound
-                makeSound(600, 100);
-                makeSound(600, 100);
+                makeSound(600, 50, 4);
             }
+            else if (BUTTON_PRESSED(3))
+            {
+                message[currentMessageIndex++] = DOT;
+                FLASH_LED(4, UNIT_LENGTH_MS);
+            }
+            else if (BUTTON_PRESSED(4))
+            {
+                message[currentMessageIndex++] = DASH;
+                FLASH_LED(5, UNIT_LENGTH_MS);
+            }
+            else if (BUTTON_PRESSED(5))
+            {
+                message[currentMessageIndex++] = WORD_SEPARATOR;
+                FLASH_LED(6, UNIT_LENGTH_MS);
+            }
+
+            // Add a delay to reduce detecting redundant button press states
+            __delay_ms(500);
+            break;
+
         case Transmitting:
             if (currentMessageIndex < MAX_MESSAGE_LENGTH)
             {
@@ -183,6 +194,7 @@ void processMode(enum modeType mode)
             }
             else
                 currentMessageIndex = 0;
+            break;
         }
         checkForSenderStateChange();
         break;
