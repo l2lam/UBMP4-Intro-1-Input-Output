@@ -28,6 +28,7 @@ enum modeType
 };
 enum modeType currentMode = Sender;
 
+#define NNOTES 26
 void processMode(enum modeType mode)
 {
     // Set mode indicators
@@ -43,6 +44,30 @@ void processMode(enum modeType mode)
     case Diagnostic:
         TURN_ON_LED(3);
         TURN_ON_LED(6);
+        if (BUTTON_PRESSED(2) && !BUTTON_PRESSED(5))
+        {
+            // Test song: mary had a little lamb
+            enum Note song[NNOTES] = {B, A, G, A, B, B, B, A, A, A, B, B, B, B, A, G, A, B, B, B, A, A, B, A, G, G};
+            //enum Note song[NNOTES] = {B, A, G, A, B, B, B};
+            for (int i = 0; i < NNOTES; i++)
+                playNote(song[i], 1);
+        }
+        else if (BUTTON_PRESSED(3))
+        {
+            FLASH_LED(4, UNIT_LENGTH_MS);
+            PERIOD_SCALE -= 1;
+        }
+        else if (BUTTON_PRESSED(4))
+        {
+            FLASH_LED(5, UNIT_LENGTH_MS);
+            PERIOD_SCALE += 1;
+        }
+        else if (BUTTON_PRESSED(5))
+        {
+            FLASH_LED(6, UNIT_LENGTH_MS);
+            NOTE_DURATION_CYCLES = (NOTE_DURATION_CYCLES + 100) % 1000;
+        }
+        __delay_ms(200);
         break;
     }
 }
