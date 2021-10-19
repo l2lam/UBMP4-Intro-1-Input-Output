@@ -26,7 +26,7 @@ The program starts in Sender mode. Users toggle between modes by simultaneously 
 
 ## Sender Mode
 
-Sender mode has 2 sub-modes (states):
+Sender mode has 2 sub-modes:
 
 1. Accepting Input - lets the user input the morse code message
 
@@ -38,7 +38,7 @@ Sender mode has 2 sub-modes (states):
 
    > LED4 will flash the recorded morse code
 
-The program starts in the Accepting Input state. Users toggle between states by pressing SW2.
+The program starts in the Accepting Input mode. Users toggle between these sub-modes by pressing SW2 while in Sender mode. LED4 and LED6 will flash simultaneously to indicate entering Accepting Input mode. LED5 and LED6 will flash to indicate entering Transmitting mode.
 
 ## Receiver Mode
 

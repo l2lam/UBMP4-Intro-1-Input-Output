@@ -57,17 +57,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=UBMP4.c morseCode.c
+SOURCEFILES_QUOTED_IF_SPACED=UBMP4.c morseCode.c convenience.c senderMode.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/UBMP4.p1 ${OBJECTDIR}/morseCode.p1
-POSSIBLE_DEPFILES=${OBJECTDIR}/UBMP4.p1.d ${OBJECTDIR}/morseCode.p1.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/UBMP4.p1 ${OBJECTDIR}/morseCode.p1 ${OBJECTDIR}/convenience.p1 ${OBJECTDIR}/senderMode.p1
+POSSIBLE_DEPFILES=${OBJECTDIR}/UBMP4.p1.d ${OBJECTDIR}/morseCode.p1.d ${OBJECTDIR}/convenience.p1.d ${OBJECTDIR}/senderMode.p1.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/UBMP4.p1 ${OBJECTDIR}/morseCode.p1
+OBJECTFILES=${OBJECTDIR}/UBMP4.p1 ${OBJECTDIR}/morseCode.p1 ${OBJECTDIR}/convenience.p1 ${OBJECTDIR}/senderMode.p1
 
 # Source Files
-SOURCEFILES=UBMP4.c morseCode.c
+SOURCEFILES=UBMP4.c morseCode.c convenience.c senderMode.c
 
 
 
@@ -110,6 +110,22 @@ ${OBJECTDIR}/morseCode.p1: morseCode.c  nbproject/Makefile-${CND_CONF}.mk
 	@-${MV} ${OBJECTDIR}/morseCode.d ${OBJECTDIR}/morseCode.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/morseCode.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
+${OBJECTDIR}/convenience.p1: convenience.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/convenience.p1.d 
+	@${RM} ${OBJECTDIR}/convenience.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -mrom=default,-0-07FF -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -mext=cci -Wa,-a -DXPRJ_free=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file -mcodeoffset=800  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-osccal -mno-resetbits -mno-save-resetbits -mno-download -mno-stackcall $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto     -o ${OBJECTDIR}/convenience.p1 convenience.c 
+	@-${MV} ${OBJECTDIR}/convenience.d ${OBJECTDIR}/convenience.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/convenience.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/senderMode.p1: senderMode.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/senderMode.p1.d 
+	@${RM} ${OBJECTDIR}/senderMode.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -mrom=default,-0-07FF -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -mext=cci -Wa,-a -DXPRJ_free=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file -mcodeoffset=800  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-osccal -mno-resetbits -mno-save-resetbits -mno-download -mno-stackcall $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto     -o ${OBJECTDIR}/senderMode.p1 senderMode.c 
+	@-${MV} ${OBJECTDIR}/senderMode.d ${OBJECTDIR}/senderMode.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/senderMode.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
 else
 ${OBJECTDIR}/UBMP4.p1: UBMP4.c  nbproject/Makefile-${CND_CONF}.mk 
 	@${MKDIR} "${OBJECTDIR}" 
@@ -126,6 +142,22 @@ ${OBJECTDIR}/morseCode.p1: morseCode.c  nbproject/Makefile-${CND_CONF}.mk
 	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -mrom=default,-0-07FF -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -mext=cci -Wa,-a -DXPRJ_free=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file -mcodeoffset=800  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-osccal -mno-resetbits -mno-save-resetbits -mno-download -mno-stackcall $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto     -o ${OBJECTDIR}/morseCode.p1 morseCode.c 
 	@-${MV} ${OBJECTDIR}/morseCode.d ${OBJECTDIR}/morseCode.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/morseCode.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/convenience.p1: convenience.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/convenience.p1.d 
+	@${RM} ${OBJECTDIR}/convenience.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -mrom=default,-0-07FF -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -mext=cci -Wa,-a -DXPRJ_free=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file -mcodeoffset=800  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-osccal -mno-resetbits -mno-save-resetbits -mno-download -mno-stackcall $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto     -o ${OBJECTDIR}/convenience.p1 convenience.c 
+	@-${MV} ${OBJECTDIR}/convenience.d ${OBJECTDIR}/convenience.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/convenience.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/senderMode.p1: senderMode.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/senderMode.p1.d 
+	@${RM} ${OBJECTDIR}/senderMode.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -mrom=default,-0-07FF -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -mext=cci -Wa,-a -DXPRJ_free=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file -mcodeoffset=800  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-osccal -mno-resetbits -mno-save-resetbits -mno-download -mno-stackcall $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto     -o ${OBJECTDIR}/senderMode.p1 senderMode.c 
+	@-${MV} ${OBJECTDIR}/senderMode.d ${OBJECTDIR}/senderMode.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/senderMode.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
 endif
 
