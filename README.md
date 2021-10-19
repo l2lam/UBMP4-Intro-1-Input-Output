@@ -9,7 +9,7 @@ Students or anyone interested in writing simple programs for the Microchip PIC16
 
 # User Interface
 
-SW1 is reserved for resetting the UBMP4 device into boot-loader mode.
+SW1 is reserved for resetting the UBMP4 device into boot-loader mode. Visual and audio cues using the LEDs and Buzzer are used to indicate program modes and confirming user inputs (button presses).
 
 ## Program Modes
 
@@ -22,7 +22,7 @@ The program has 3 modes:
 3. Diagnostic - for debugging (future)
    > In this mode both D3 and D6 are on
 
-The program starts in Sender mode. Users toggle between modes by simultaneously pressing SW2 and SW5
+The program starts in Sender mode. Users toggle between modes by simultaneously pressing SW2 and SW5.
 
 ## Sender Mode
 
@@ -36,7 +36,9 @@ Sender mode has 2 sub-modes (states):
 
 2. Transmitting - repeated sends the message
 
-The program starts in the Accepting Input state. Users toggle between states by pressing SW2
+   > LED4 will flash the recorded morse code
+
+The program starts in the Accepting Input state. Users toggle between states by pressing SW2.
 
 ## Receiver Mode
 
@@ -45,3 +47,5 @@ TODO
 ## Diagnostic Mode
 
 TODO
+
+Currently this mode is used to test the Buzzer. Please see the code for details.
