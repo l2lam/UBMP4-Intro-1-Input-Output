@@ -120,8 +120,8 @@ void __interrupt() isr()
         if (SW1_INTERRUPT_FLAG == 1)
         {
             SW1_INTERRUPT_FLAG = 0;
-            FLASH_LED(6);
-            makeSound(400, 300);
+            FLASH_LED(6, 100);
+            makeSound(400, 300, 1);
             checkForReset();
         }
     }

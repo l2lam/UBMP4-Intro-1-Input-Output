@@ -78,7 +78,6 @@ void playNote(unsigned int notePlus)
         length = length * 4 / 3;
         break;
     case HalfNote:
-        FLASH_LED(4, 100);
         length = length * 2;
         break;
     case TwoThirdNote:
@@ -88,7 +87,6 @@ void playNote(unsigned int notePlus)
         length = length * 3;
         break;
     case FullNote:
-        FLASH_LED(5, 100);
         length = length * 4;
         break;
     }
