@@ -18,6 +18,7 @@
 #include "stdbool.h"     // Include Boolean (true/false) definition
 #include "UBMP4.h"       // Include UBMP4 constants and functions
 #include "convenience.h" // Include convenience utilities
+#include "buzzer.h"      // Include Buzzer utilities
 #include "senderMode.h"  // Include sender mode definitions
 
 #define USING_INTERRUPTS 1
