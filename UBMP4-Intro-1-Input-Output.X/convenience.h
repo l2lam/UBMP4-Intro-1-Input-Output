@@ -40,6 +40,11 @@ enum MusicalNoteLength
     FullNote = 5 << MUSICAL_NOTE_BITS
 };
 
+/**
+ * Play a musical note
+ * 
+ * @param notePlus a combined value that represent the MusicalNote and MusicalNoteLength
+ */
 void playNote(unsigned int notePlus);
 
 /**

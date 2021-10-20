@@ -120,11 +120,8 @@ void __interrupt() isr()
         if (SW1_INTERRUPT_FLAG == 1)
         {
             SW1_INTERRUPT_FLAG = 0;
-            TURN_ON_LED(6);
-            BEEPER = 1;
-            for (int i = 0; i < 200; i++)
-                ;
-            BEEPER = 0;
+            FLASH_LED(6);
+            makeSound(400, 300);
             checkForReset();
         }
     }
@@ -133,8 +130,7 @@ void __interrupt() isr()
 // TODO Set linker ROM ranges to 'default,-0-7FF' under "Memory model" pull-down.
 // TODO Set linker code offset to '800' under "Additional options" pull-down.
 
-// The main function is required, and the program begins executing from here.
-
+// This is the entry point for the program
 int main(void)
 {
     // Configure oscillator and I/O ports. These functions run once at start-up.
