@@ -20,15 +20,26 @@
 #include "convenience.h" // Include convenience utilities
 #include "senderMode.h"  // Include sender mode definitions
 
+#define USING_INTERRUPTS 1
+
 enum modeType
 {
     Sender,
     Receiver,
     Diagnostic
 };
-enum modeType currentMode = Sender;
+enum modeType currentMode = Diagnostic;
 
 #define NNOTES 26
+void playTestSounds()
+{
+    // Test song: mary had a little lamb
+    unsigned int song[NNOTES] = {B, A, G, A, B, B, B | FullNote, A, A, A | HalfNote, B, B, B | HalfNote, B, A, G, A, B, B, B, A, A, B, A, G | HalfNote, G | FullNote};
+    //enum MusicalNote song[NNOTES] = {B, A, G, A, B, B, B};
+    for (int i = 0; i < NNOTES; i++)
+        playNote(song[i]);
+}
+
 void processMode(enum modeType mode)
 {
     // Set mode indicators
@@ -45,13 +56,7 @@ void processMode(enum modeType mode)
         TURN_ON_LED(3);
         TURN_ON_LED(6);
         if (BUTTON_PRESSED(2) && !BUTTON_PRESSED(5))
-        {
-            // Test song: mary had a little lamb
-            enum Note song[NNOTES] = {B, A, G, A, B, B, B, A, A, A, B, B, B, B, A, G, A, B, B, B, A, A, B, A, G, G};
-            //enum Note song[NNOTES] = {B, A, G, A, B, B, B};
-            for (int i = 0; i < NNOTES; i++)
-                playNote(song[i], 1);
-        }
+            playTestSounds();
         else if (BUTTON_PRESSED(3))
         {
             FLASH_LED(4, UNIT_LENGTH_MS);
@@ -65,7 +70,7 @@ void processMode(enum modeType mode)
         else if (BUTTON_PRESSED(5))
         {
             FLASH_LED(6, UNIT_LENGTH_MS);
-            NOTE_DURATION_CYCLES = (NOTE_DURATION_CYCLES + 100) % 1000;
+            QUARTER_NOTE_DURATION_CYCLES = (QUARTER_NOTE_DURATION_CYCLES + 100) % 1000;
         }
         __delay_ms(200);
         break;
@@ -103,7 +108,7 @@ void checkForReset()
 #if USING_INTERRUPTS
 void setupInterrupts()
 {
-    IOCBNbits.IOCBN7 = 1;
+    SW1_INTERRUPT_ENABLE = 1;
     INTCONbits.IOCIE = 1;
     INTCONbits.GIE = 1;
 }
@@ -112,17 +117,16 @@ void __interrupt() isr()
     if (INTCONbits.IOCIF == 1)
     {
         INTCONbits.IOCIF = 0;
-        if (IOCBFbits.IOCBF7 == 1)
-
-            if (IOCBFbits.IOCBF7 == 1)
-            {
-                TURN_ON_LED(6);
-                IOCBFbits.IOCBF7 = 0;
-                BEEPER = 1;
-                for (int i = 0; i < 200; i++)
-                    ;
-                BEEPER = 0;
-            }
+        if (SW1_INTERRUPT_FLAG == 1)
+        {
+            SW1_INTERRUPT_FLAG = 0;
+            TURN_ON_LED(6);
+            BEEPER = 1;
+            for (int i = 0; i < 200; i++)
+                ;
+            BEEPER = 0;
+            checkForReset();
+        }
     }
 }
 #endif

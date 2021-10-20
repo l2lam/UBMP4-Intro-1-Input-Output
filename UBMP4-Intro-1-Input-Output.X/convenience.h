@@ -12,11 +12,9 @@
     TURN_OFF_LED(first);                      \
     TURN_OFF_LED(second)
 
-//#define NOTE_DURATION_CYCLES = 300
-unsigned int NOTE_DURATION_CYCLES = 700;
 unsigned int PERIOD_SCALE = 80;
 
-enum Note
+enum MusicalNote
 {
     A,
     B,
@@ -25,9 +23,24 @@ enum Note
     D,
     E,
     F,
-    G
+    G,
+    REST,
 };
-void playNote(enum Note note, unsigned int length);
+#define MUSICAL_NOTE_BITS 5 // number of bits reserved for mustical note
+#define MUSICAL_NOTE_MASK 0b00011111
+unsigned int QUARTER_NOTE_DURATION_CYCLES = 700;
+
+enum MusicalNoteLength
+{
+    //QuarterNote = 0 << MUSICAL_NOTE_BITS, // This the default
+    OneThirdNote = 1 << MUSICAL_NOTE_BITS,
+    HalfNote = 2 << MUSICAL_NOTE_BITS,
+    TwoThirdNote = 3 << MUSICAL_NOTE_BITS,
+    ThreeQuarterNote = 4 << MUSICAL_NOTE_BITS,
+    FullNote = 5 << MUSICAL_NOTE_BITS
+};
+
+void playNote(unsigned int notePlus);
 
 /**
  * Make a noise on the buzzer with the given params a number of times (nTimes)

@@ -17,9 +17,11 @@ void makeSound(unsigned int cycles, unsigned long period, unsigned int nTimes)
     }
 }
 
-void playNote(enum Note note, unsigned int length)
+void playNote(unsigned int notePlus)
 {
+    enum MusicalNote note = notePlus & MUSICAL_NOTE_MASK;
     unsigned int scalingValue = 0, frequency = 0, period = 0;
+
     switch (note)
     {
     case C:
@@ -62,8 +64,35 @@ void playNote(enum Note note, unsigned int length)
         frequency = 4882;
         period = 9832;
         break;
+    default:
+        // REST and unsupported notes
+        period = 0;
     }
 
-    makeSound(length * NOTE_DURATION_CYCLES, period / PERIOD_SCALE, 1);
+    enum MusicalNoteLength noteLength = notePlus & ~MUSICAL_NOTE_MASK;
+    unsigned int length = QUARTER_NOTE_DURATION_CYCLES;
+
+    switch (noteLength)
+    {
+    case OneThirdNote:
+        length = length * 4 / 3;
+        break;
+    case HalfNote:
+        FLASH_LED(4, 100);
+        length = length * 2;
+        break;
+    case TwoThirdNote:
+        length = length * 8 / 3;
+        break;
+    case ThreeQuarterNote:
+        length = length * 3;
+        break;
+    case FullNote:
+        FLASH_LED(5, 100);
+        length = length * 4;
+        break;
+    }
+
+    makeSound(length, period / PERIOD_SCALE, 1);
     __delay_ms(50);
 }
