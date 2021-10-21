@@ -6,3 +6,4 @@ private/
 Makefile-genesis.properties
 Makefile-local-free.mk
 settings.json
+c_cpp_properties.json

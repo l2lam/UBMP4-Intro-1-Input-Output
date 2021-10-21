@@ -1,6 +1,7 @@
 #include "xc.h"          // Microchip XC8 compiler include file
 #include "UBMP4.h"       // Include UBMP4 constants and functions
 #include "convenience.h" // Include convenience utilities
+#include "buzzer.h"
 #include "senderMode.h"
 
 void transmitDot()
@@ -84,11 +85,13 @@ void processSenderMode()
         else if (BUTTON_PRESSED(3))
         {
             pushToMessage(DOT);
+            playMorseCodeDotSound();
             FLASH_LED(4, UNIT_LENGTH_MS);
         }
         else if (BUTTON_PRESSED(4))
         {
             pushToMessage(DASH);
+            playMorseCodeDashSound();
             FLASH_LED(5, UNIT_LENGTH_MS);
         }
         else if (BUTTON_PRESSED(5))
@@ -109,9 +112,11 @@ void processSenderMode()
                 switch (code)
                 {
                 case DOT:
+                    //playMorseCodeDotSound();
                     transmitDot();
                     break;
                 case DASH:
+                    //playMorseCodeDashSound();
                     transmitDash();
                     break;
                 default:

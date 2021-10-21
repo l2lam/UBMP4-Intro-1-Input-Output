@@ -8,6 +8,7 @@
       <itemPath>PIC16F1459config.h</itemPath>
       <itemPath>convenience.h</itemPath>
       <itemPath>senderMode.h</itemPath>
+      <itemPath>buzzer.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -18,8 +19,8 @@
                    projectFiles="true">
       <itemPath>UBMP4.c</itemPath>
       <itemPath>morseCode.c</itemPath>
-      <itemPath>convenience.c</itemPath>
       <itemPath>senderMode.c</itemPath>
+      <itemPath>buzzer.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

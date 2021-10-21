@@ -1,6 +1,7 @@
 #include "xc.h"    // Microchip XC8 compiler include file
 #include "UBMP4.h" // Include UBMP4 constants and functions
 #include "convenience.h"
+#include "buzzer.h"
 
 void makeSound(unsigned int cycles, unsigned long period, unsigned int nTimes)
 {
@@ -93,4 +94,14 @@ void playNote(unsigned int notePlus)
 
     makeSound(length, period / PERIOD_SCALE, 1);
     __delay_ms(50);
+}
+
+void playMorseCodeDotSound()
+{
+    makeSound(MORSE_CODE_DOT_CYCLES, MORSE_CODE_DOT_PERIOD / PERIOD_SCALE, 1);
+}
+
+void playMorseCodeDashSound()
+{
+    makeSound(MORSE_CODE_DOT_CYCLES * 3, MORSE_CODE_DOT_PERIOD / PERIOD_SCALE, 1);
 }
