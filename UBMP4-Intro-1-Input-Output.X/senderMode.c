@@ -1,6 +1,7 @@
 #include "xc.h"          // Microchip XC8 compiler include file
 #include "UBMP4.h"       // Include UBMP4 constants and functions
 #include "convenience.h" // Include convenience utilities
+#include "buzzer.h"
 #include "senderMode.h"
 
 void transmitDot()
