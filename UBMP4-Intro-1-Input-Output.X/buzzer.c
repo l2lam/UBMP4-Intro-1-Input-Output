@@ -95,3 +95,13 @@ void playNote(unsigned int notePlus)
     makeSound(length, period / PERIOD_SCALE, 1);
     __delay_ms(50);
 }
+
+void playMorseCodeDotSound()
+{
+    makeSound(MORSE_CODE_DOT_CYCLES, MORSE_CODE_DOT_PERIOD / PERIOD_SCALE, 1);
+}
+
+void playMorseCodeDashSound()
+{
+    makeSound(MORSE_CODE_DOT_CYCLES * 3, MORSE_CODE_DOT_PERIOD / PERIOD_SCALE, 1);
+}

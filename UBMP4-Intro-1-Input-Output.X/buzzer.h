@@ -49,3 +49,17 @@ void playNote(unsigned int notePlus);
  * Make a noise on the buzzer with the given params a number of times (nTimes)
  **/
 void makeSound(unsigned int cycles, unsigned long period, unsigned int nTimes);
+
+unsigned int MORSE_CODE_DOT_PERIOD = 100000;
+//#define MORSE_CODE_DOT_PERIOD 60000
+#define MORSE_CODE_DOT_CYCLES 200
+
+/**
+ * Make the Morse Code sound for a Dot
+ */
+void playMorseCodeDotSound();
+
+/**
+ * Make the Morse Code sound for a Dash
+ */
+void playMorseCodeDashSound();
