@@ -50,7 +50,7 @@ void playNote(unsigned int notePlus);
  **/
 void makeSound(unsigned int cycles, unsigned long period, unsigned int nTimes);
 
-unsigned int MORSE_CODE_DOT_PERIOD = 100000;
+unsigned int MORSE_CODE_DOT_PERIOD = 80000;
 //#define MORSE_CODE_DOT_PERIOD 60000
 #define MORSE_CODE_DOT_CYCLES 200
 

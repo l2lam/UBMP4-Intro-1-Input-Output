@@ -3,19 +3,36 @@
 #include "convenience.h"
 #include "buzzer.h"
 
-void makeSound(unsigned int cycles, unsigned long period, unsigned int nTimes)
+typedef unsigned int (*fPeriodCycleRelation)(unsigned int cycleIndex, unsigned int totalCycles, unsigned int maxPeriod);
+unsigned int constantPeriod(unsigned int cycleIndex, unsigned int totalCycles, unsigned int maxPeriod) {
+    return maxPeriod;
+}
+unsigned int risingPeriod(unsigned int cycleIndex, unsigned int totalCycles, unsigned int maxPeriod) {
+    return cycleIndex * maxPeriod / totalCycles;
+}
+unsigned int fallingPeriod(unsigned int cycleIndex, unsigned int totalCycles, unsigned int maxPeriod) {
+    return maxPeriod - cycleIndex * maxPeriod / totalCycles;
+}
+
+void _makeSound(unsigned int cycles, unsigned long period, unsigned int nTimes, fPeriodCycleRelation f)
 {
     for (unsigned int i = 0; i < nTimes; i++)
     {
         for (unsigned int c = 0; c < cycles; c++)
         {
             BEEPER = !BEEPER;
-            for (unsigned int p = 0; p < period; p++)
+            unsigned int n = (*f)(c, cycles, period);
+            for (unsigned int p = 0; p < n; p++)
                 ;
         }
         if (i > 0 && i < nTimes - 1)
             __delay_ms(300);
     }
+}
+
+void makeSound(unsigned int cycles, unsigned long period, unsigned int nTimes)
+{ 
+    return _makeSound(cycles, period, nTimes, &constantPeriod);
 }
 
 void playNote(unsigned int notePlus)
@@ -98,10 +115,10 @@ void playNote(unsigned int notePlus)
 
 void playMorseCodeDotSound()
 {
-    makeSound(MORSE_CODE_DOT_CYCLES, MORSE_CODE_DOT_PERIOD / PERIOD_SCALE, 1);
+    _makeSound(MORSE_CODE_DOT_CYCLES, MORSE_CODE_DOT_PERIOD / PERIOD_SCALE, 1, &risingPeriod);
 }
 
 void playMorseCodeDashSound()
 {
-    makeSound(MORSE_CODE_DOT_CYCLES * 3, MORSE_CODE_DOT_PERIOD / PERIOD_SCALE, 1);
+    _makeSound(MORSE_CODE_DOT_CYCLES * 3, MORSE_CODE_DOT_PERIOD / PERIOD_SCALE, 1, &fallingPeriod);
 }
