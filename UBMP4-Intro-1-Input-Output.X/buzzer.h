@@ -9,6 +9,7 @@ unsigned int PERIOD_SCALE = 80;
 #define MUSICAL_NOTE_MASK 0b00011111
 
 // Here are the enumerated values for the notes for convenience
+// TODO: support more than one octave
 enum MusicalNote
 {
     A,
@@ -19,23 +20,24 @@ enum MusicalNote
     E,
     F,
     G,
-    REST,
+    Rest,
+    TheEnd // this flag can be used to signal the end of a song
 };
 
 // Here are the enumerated values for the standard lengths of a notes.
 // Note that a quarter note is the default length so does not need to expressed explicitly.
 enum MusicalNoteLength
 {
-    //QuarterNote = 0 << MUSICAL_NOTE_BITS, // This the default
-    OneThirdNote = 1 << MUSICAL_NOTE_BITS,
-    HalfNote = 2 << MUSICAL_NOTE_BITS,
-    TwoThirdNote = 3 << MUSICAL_NOTE_BITS,
-    ThreeQuarterNote = 4 << MUSICAL_NOTE_BITS,
+    //EigthNote = 0 << MUSICAL_NOTE_BITS, // This the default
+    QuarterNote = 1 << MUSICAL_NOTE_BITS,
+    ThreeEigthNote = 2 << MUSICAL_NOTE_BITS,
+    HalfNote = 3 << MUSICAL_NOTE_BITS,
+    SixEigthNote = 4 << MUSICAL_NOTE_BITS,
     FullNote = 5 << MUSICAL_NOTE_BITS
 };
 // This is the duration of a quarter note expressed in program-execution cycles.
 // The actual duration of the note played will depend on the processor speed/frequency.
-unsigned int QUARTER_NOTE_DURATION_CYCLES = 700;
+unsigned int EIGTH_NOTE_DURATION_CYCLES = 700;
 
 /**
  * Play a musical note
@@ -63,3 +65,5 @@ void playMorseCodeDotSound();
  * Make the Morse Code sound for a Dash
  */
 void playMorseCodeDashSound();
+
+void playTestSounds();

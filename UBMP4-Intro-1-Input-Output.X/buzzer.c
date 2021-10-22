@@ -4,13 +4,16 @@
 #include "buzzer.h"
 
 typedef unsigned int (*fPeriodCycleRelation)(unsigned int cycleIndex, unsigned int totalCycles, unsigned int maxPeriod);
-unsigned int constantPeriod(unsigned int cycleIndex, unsigned int totalCycles, unsigned int maxPeriod) {
+unsigned int constantPeriod(unsigned int cycleIndex, unsigned int totalCycles, unsigned int maxPeriod)
+{
     return maxPeriod;
 }
-unsigned int risingPeriod(unsigned int cycleIndex, unsigned int totalCycles, unsigned int maxPeriod) {
+unsigned int risingPeriod(unsigned int cycleIndex, unsigned int totalCycles, unsigned int maxPeriod)
+{
     return cycleIndex * maxPeriod / totalCycles;
 }
-unsigned int fallingPeriod(unsigned int cycleIndex, unsigned int totalCycles, unsigned int maxPeriod) {
+unsigned int fallingPeriod(unsigned int cycleIndex, unsigned int totalCycles, unsigned int maxPeriod)
+{
     return maxPeriod - cycleIndex * maxPeriod / totalCycles;
 }
 
@@ -31,7 +34,7 @@ void _makeSound(unsigned int cycles, unsigned long period, unsigned int nTimes, 
 }
 
 void makeSound(unsigned int cycles, unsigned long period, unsigned int nTimes)
-{ 
+{
     return _makeSound(cycles, period, nTimes, &constantPeriod);
 }
 
@@ -88,24 +91,24 @@ void playNote(unsigned int notePlus)
     }
 
     enum MusicalNoteLength noteLength = notePlus & ~MUSICAL_NOTE_MASK;
-    unsigned int length = QUARTER_NOTE_DURATION_CYCLES;
+    unsigned int length = EIGTH_NOTE_DURATION_CYCLES;
 
     switch (noteLength)
     {
-    case OneThirdNote:
-        length = length * 4 / 3;
-        break;
-    case HalfNote:
+    case QuarterNote:
         length = length * 2;
         break;
-    case TwoThirdNote:
-        length = length * 8 / 3;
-        break;
-    case ThreeQuarterNote:
+    case ThreeEigthNote:
         length = length * 3;
         break;
-    case FullNote:
+    case HalfNote:
         length = length * 4;
+        break;
+    case SixEigthNote:
+        length = length * 6;
+        break;
+    case FullNote:
+        length = length * 8;
         break;
     }
 
@@ -121,4 +124,20 @@ void playMorseCodeDotSound()
 void playMorseCodeDashSound()
 {
     _makeSound(MORSE_CODE_DOT_CYCLES * 3, MORSE_CODE_DOT_PERIOD / PERIOD_SCALE, 1, &fallingPeriod);
+}
+
+#define MAX_SONG_LENGTH 100
+unsigned int westworldTheme[] = {E | QuarterNote, F, E | QuarterNote, F, E, D, C | ThreeEigthNote, D | FullNote, D | QuarterNote, E, D | QuarterNote, E, D, C, A | HalfNote, A | FullNote, TheEnd};
+unsigned int maryHadALittleLamb[] = {B, A, G, A, B, B, B | QuarterNote, A, A, A | QuarterNote, B, C, C | QuarterNote, B, A, G, A, B, B, B | QuarterNote, A, A, B, A, G | QuarterNote, G | HalfNote, TheEnd};
+unsigned int *songs[] = {maryHadALittleLamb, westworldTheme};
+unsigned int currentSongIndex = 0;
+
+void playTestSounds()
+{
+    unsigned int *song = songs[currentSongIndex];
+    unsigned int i = 0;
+    while (song[i] != TheEnd || i > MAX_SONG_LENGTH)
+        playNote(song[i++]);
+
+    currentSongIndex = (currentSongIndex + 1) % (sizeof(songs) / sizeof(songs[0]));
 }

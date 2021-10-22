@@ -31,14 +31,6 @@ enum modeType
 };
 enum modeType currentMode = Diagnostic;
 
-unsigned int maryHadALittleLamb[26] = {B, A, G, A, B, B, B | HalfNote, A, A, A | HalfNote, B, B, B | HalfNote, B, A, G, A, B, B, B | OneThirdNote, A, A, B, A, G | HalfNote, G | FullNote};
-void playTestSounds()
-{
-    unsigned int n = sizeof(maryHadALittleLamb) / sizeof(maryHadALittleLamb[0]);
-    for (int i = 0; i < n; i++)
-        playNote(maryHadALittleLamb[i]);
-}
-
 void processMode(enum modeType mode)
 {
     // Set mode indicators
@@ -60,7 +52,7 @@ void processMode(enum modeType mode)
         {
             FLASH_LED(4, UNIT_LENGTH_MS);
             PERIOD_SCALE -= 1;
-            MORSE_CODE_DOT_PERIOD -= 500;
+            MORSE_CODE_DOT_PERIOD -= 10000;
             playMorseCodeDotSound();
             __delay_ms(200);
             playMorseCodeDashSound();
@@ -69,7 +61,7 @@ void processMode(enum modeType mode)
         {
             FLASH_LED(5, UNIT_LENGTH_MS);
             PERIOD_SCALE += 1;
-            MORSE_CODE_DOT_PERIOD += 500;
+            MORSE_CODE_DOT_PERIOD += 10000;
             playMorseCodeDotSound();
             __delay_ms(200);
             playMorseCodeDashSound();
@@ -77,7 +69,7 @@ void processMode(enum modeType mode)
         else if (BUTTON_PRESSED(5))
         {
             FLASH_LED(6, UNIT_LENGTH_MS);
-            QUARTER_NOTE_DURATION_CYCLES = (QUARTER_NOTE_DURATION_CYCLES + 100) % 1000;
+            EIGTH_NOTE_DURATION_CYCLES = (EIGTH_NOTE_DURATION_CYCLES + 100) % 1000;
         }
         __delay_ms(200);
         break;
