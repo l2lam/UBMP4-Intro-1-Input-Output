@@ -31,16 +31,6 @@ enum modeType
 };
 enum modeType currentMode = Diagnostic;
 
-#define NNOTES 26
-void playTestSounds()
-{
-    // Test song: mary had a little lamb
-    unsigned int song[NNOTES] = {B, A, G, A, B, B, B | FullNote, A, A, A | HalfNote, B, B, B | HalfNote, B, A, G, A, B, B, B, A, A, B, A, G | HalfNote, G | FullNote};
-    //enum MusicalNote song[NNOTES] = {B, A, G, A, B, B, B};
-    for (int i = 0; i < NNOTES; i++)
-        playNote(song[i]);
-}
-
 void processMode(enum modeType mode)
 {
     // Set mode indicators
@@ -62,16 +52,24 @@ void processMode(enum modeType mode)
         {
             FLASH_LED(4, UNIT_LENGTH_MS);
             PERIOD_SCALE -= 1;
+            MORSE_CODE_DOT_PERIOD -= 10000;
+            playMorseCodeDotSound();
+            __delay_ms(200);
+            playMorseCodeDashSound();
         }
         else if (BUTTON_PRESSED(4))
         {
             FLASH_LED(5, UNIT_LENGTH_MS);
             PERIOD_SCALE += 1;
+            MORSE_CODE_DOT_PERIOD += 10000;
+            playMorseCodeDotSound();
+            __delay_ms(200);
+            playMorseCodeDashSound();
         }
         else if (BUTTON_PRESSED(5))
         {
             FLASH_LED(6, UNIT_LENGTH_MS);
-            QUARTER_NOTE_DURATION_CYCLES = (QUARTER_NOTE_DURATION_CYCLES + 100) % 1000;
+            EIGHTH_NOTE_DURATION_CYCLES = (EIGHTH_NOTE_DURATION_CYCLES + 100) % 1000;
         }
         __delay_ms(200);
         break;
