@@ -25,19 +25,19 @@ enum MusicalNote
 };
 
 // Here are the enumerated values for the standard lengths of a notes.
-// Note that a quarter note is the default length so does not need to expressed explicitly.
+// Note that an eighth-note is the default length so does not need to expressed explicitly.
 enum MusicalNoteLength
 {
-    //EigthNote = 0 << MUSICAL_NOTE_BITS, // This the default
+    //EighthNote = 0 << MUSICAL_NOTE_BITS, // This the default
     QuarterNote = 1 << MUSICAL_NOTE_BITS,
-    ThreeEigthNote = 2 << MUSICAL_NOTE_BITS,
+    ThreeEighthNote = 2 << MUSICAL_NOTE_BITS,
     HalfNote = 3 << MUSICAL_NOTE_BITS,
-    SixEigthNote = 4 << MUSICAL_NOTE_BITS,
+    SixEighthNote = 4 << MUSICAL_NOTE_BITS,
     FullNote = 5 << MUSICAL_NOTE_BITS
 };
 // This is the duration of a quarter note expressed in program-execution cycles.
 // The actual duration of the note played will depend on the processor speed/frequency.
-unsigned int EIGTH_NOTE_DURATION_CYCLES = 700;
+unsigned int EIGHTH_NOTE_DURATION_CYCLES = 700;
 
 /**
  * Play a musical note

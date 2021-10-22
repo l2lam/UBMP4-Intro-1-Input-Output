@@ -69,7 +69,7 @@ void processMode(enum modeType mode)
         else if (BUTTON_PRESSED(5))
         {
             FLASH_LED(6, UNIT_LENGTH_MS);
-            EIGTH_NOTE_DURATION_CYCLES = (EIGTH_NOTE_DURATION_CYCLES + 100) % 1000;
+            EIGHTH_NOTE_DURATION_CYCLES = (EIGHTH_NOTE_DURATION_CYCLES + 100) % 1000;
         }
         __delay_ms(200);
         break;

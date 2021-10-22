@@ -114,20 +114,20 @@ void playNote(unsigned int notePlus)
     }
 
     enum MusicalNoteLength noteLength = notePlus & ~MUSICAL_NOTE_MASK;
-    unsigned int length = EIGTH_NOTE_DURATION_CYCLES;
+    unsigned int length = EIGHTH_NOTE_DURATION_CYCLES;
 
     switch (noteLength)
     {
     case QuarterNote:
         length = length * 2;
         break;
-    case ThreeEigthNote:
+    case ThreeEighthNote:
         length = length * 3;
         break;
     case HalfNote:
         length = length * 4;
         break;
-    case SixEigthNote:
+    case SixEighthNote:
         length = length * 6;
         break;
     case FullNote:
@@ -150,7 +150,7 @@ void playMorseCodeDashSound()
 }
 
 #define MAX_SONG_LENGTH 100
-unsigned int westworldTheme[] = {E | QuarterNote, F, E | QuarterNote, F, E, D, C | ThreeEigthNote, D | FullNote, D | QuarterNote, E, D | QuarterNote, E, D, C, A | HalfNote, A | FullNote, TheEnd};
+unsigned int westworldTheme[] = {E | QuarterNote, F, E | QuarterNote, F, E, D, C | ThreeEighthNote, D | FullNote, D | QuarterNote, E, D | QuarterNote, E, D, C, A | HalfNote, A | FullNote, TheEnd};
 unsigned int maryHadALittleLamb[] = {B, A, G, A, B, B, B | QuarterNote, A, A, A | QuarterNote, B, C, C | QuarterNote, B, A, G, A, B, B, B | QuarterNote, A, A, B, A, G | QuarterNote, G | HalfNote, TheEnd};
 unsigned int *songs[] = {maryHadALittleLamb, westworldTheme};
 unsigned int currentSongIndex = 0;
