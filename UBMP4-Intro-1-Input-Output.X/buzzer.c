@@ -3,18 +3,41 @@
 #include "convenience.h"
 #include "buzzer.h"
 
+// This is the definition of a function pointer type; so that we can pass in different functions to calculate
+// the period given the current position in the cycle, the total # of cycles and the max period.
 typedef unsigned int (*fPeriodCycleRelation)(unsigned int cycleIndex, unsigned int totalCycles, unsigned int maxPeriod);
+
+// Returns a constant period
 unsigned int constantPeriod(unsigned int cycleIndex, unsigned int totalCycles, unsigned int maxPeriod)
 {
     return maxPeriod;
 }
+
+// Returns a period that rises as the cycleIndex rises (linear)
 unsigned int risingPeriod(unsigned int cycleIndex, unsigned int totalCycles, unsigned int maxPeriod)
 {
     return cycleIndex * maxPeriod / totalCycles;
 }
+
+// Returns a period that falls as the cycleIndex rises (linear)
 unsigned int fallingPeriod(unsigned int cycleIndex, unsigned int totalCycles, unsigned int maxPeriod)
 {
     return maxPeriod - cycleIndex * maxPeriod / totalCycles;
+}
+
+// Returns a falling, then rising parabolic period
+unsigned int valleyPeriod(unsigned int cycleIndex, unsigned int totalCycles, unsigned int maxPeriod)
+{
+    unsigned int halfCycle = totalCycles / 2;
+    unsigned int mainPart = cycleIndex - halfCycle;
+
+    return mainPart * mainPart * maxPeriod / (halfCycle * halfCycle);
+}
+
+// Returns the opposite of the valleyPeriod
+unsigned int hillPeriod(unsigned int cycleIndex, unsigned int totalCycles, unsigned int maxPeriod)
+{
+    return maxPeriod - valleyPeriod(cycleIndex, totalCycles, maxPeriod);
 }
 
 void _makeSound(unsigned int cycles, unsigned long period, unsigned int nTimes, fPeriodCycleRelation f)
@@ -123,7 +146,7 @@ void playMorseCodeDotSound()
 
 void playMorseCodeDashSound()
 {
-    _makeSound(MORSE_CODE_DOT_CYCLES * 3, MORSE_CODE_DOT_PERIOD / PERIOD_SCALE, 1, &fallingPeriod);
+    _makeSound(MORSE_CODE_DOT_CYCLES * 3, MORSE_CODE_DOT_PERIOD / PERIOD_SCALE, 1, &valleyPeriod);
 }
 
 #define MAX_SONG_LENGTH 100

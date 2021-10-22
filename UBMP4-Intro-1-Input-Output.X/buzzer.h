@@ -66,4 +66,7 @@ void playMorseCodeDotSound();
  */
 void playMorseCodeDashSound();
 
+/**
+ * Play some test sounds 
+ */
 void playTestSounds();
