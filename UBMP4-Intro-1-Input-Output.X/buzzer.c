@@ -3,6 +3,9 @@
 #include "convenience.h"
 #include "buzzer.h"
 
+#define MIN(x, y) x < y ? x : y
+#define MAX(x, y) x < y ? y : x
+
 // This is the definition of a function pointer type; so that we can pass in different functions to calculate
 // the period given the current position in the cycle, the total # of cycles and the max period.
 typedef unsigned int (*fPeriodCycleRelation)(unsigned int cycleIndex, unsigned int totalCycles, unsigned int maxPeriod);
@@ -61,7 +64,8 @@ void makeSound(unsigned int cycles, unsigned long period, unsigned int nTimes)
     return _makeSound(cycles, period, nTimes, &constantPeriod);
 }
 
-void playNote(unsigned int notePlus)
+#define CLOCK_FREQ 48000000
+void playNote(char notePlus)
 {
     enum MusicalNote note = notePlus & MUSICAL_NOTE_MASK;
     unsigned int scalingValue = 0, frequency = 0, period = 0;
@@ -69,44 +73,41 @@ void playNote(unsigned int notePlus)
     switch (note)
     {
     case C:
-        scalingValue = 255;
-        frequency = 2441;
-        period = 19664;
+        frequency = 33;
+        period = CLOCK_FREQ / 33; //1454545;
         break;
     case D:
-        scalingValue = 227;
-        frequency = 2741;
-        period = 17512; // clock frequency divided by note frequency
+        frequency = 37;
+        period = CLOCK_FREQ / 37; // 1297297; // clock frequency divided by note frequency
         break;
     case E:
-        scalingValue = 204;
-        frequency = 3048;
-        period = 15748;
+        frequency = 41;
+        period = CLOCK_FREQ / 41; // 1170731;
         break;
     case F:
-        scalingValue = 191;
-        frequency = 3255;
-        period = 14747;
+        frequency = 44;
+        period = CLOCK_FREQ / 44; // 1090909;
         break;
     case G:
-        scalingValue = 170;
-        frequency = 3654;
-        period = 13136;
+        frequency = 49;
+        period = CLOCK_FREQ / 49;
         break;
     case A:
-        scalingValue = 153;
-        frequency = 4058;
-        period = 11828;
+        frequency = 55;
+        period = CLOCK_FREQ / 55;
         break;
     case B:
-        scalingValue = 136;
-        frequency = 4562;
-        period = 10522;
+        frequency = 62;
+        period = CLOCK_FREQ / 62;
         break;
-    case C2:
-        scalingValue = 127;
-        frequency = 4882;
-        period = 9832;
+    case Ou:
+        currentOctave = MIN(MAX_OCTAVE, currentOctave + 1);
+        break;
+    case Od:
+        currentOctave = MAX(1, currentOctave - 1);
+        break;
+    case Or:
+        currentOctave = DEFAULT_OCTAVE;
         break;
     default:
         // REST and unsupported notes
@@ -135,7 +136,11 @@ void playNote(unsigned int notePlus)
         break;
     }
 
-    makeSound(length, period / PERIOD_SCALE, 1);
+    if (note == Rest)
+        makeSound(1, length, 1);
+    else
+        makeSound(length, period / currentOctave / PERIOD_SCALE, 1);
+
     __delay_ms(50);
 }
 
@@ -149,15 +154,19 @@ void playMorseCodeDashSound()
     _makeSound(MORSE_CODE_DOT_CYCLES * 3, MORSE_CODE_DOT_PERIOD / PERIOD_SCALE, 1, &valleyPeriod);
 }
 
-#define MAX_SONG_LENGTH 100
-unsigned int westworldTheme[] = {E | QuarterNote, F, E | QuarterNote, F, E, D, C | ThreeEighthNote, D | FullNote, D | QuarterNote, E, D | QuarterNote, E, D, C, A | HalfNote, A | FullNote, TheEnd};
-unsigned int maryHadALittleLamb[] = {B, A, G, A, B, B, B | QuarterNote, A, A, A | QuarterNote, B, C, C | QuarterNote, B, A, G, A, B, B, B | QuarterNote, A, A, B, A, G | QuarterNote, G | HalfNote, TheEnd};
-unsigned int *songs[] = {maryHadALittleLamb, westworldTheme};
+#define MAX_SONG_LENGTH 10
+unsigned char testOctaveUp[] = {C | FullNote, Ou, C | FullNote, Ou, C | FullNote, TheEnd};
+unsigned char testOctaveDown[] = {C | FullNote, Od, C | FullNote, Od, C | FullNote, TheEnd};
+unsigned char testRest[] = {C, Rest, C | QuarterNote, Rest | QuarterNote, C | FullNote, Rest | FullNote, C | FullNote, TheEnd};
+unsigned char westworldTheme[] = {E | QuarterNote, F, E | QuarterNote, F, E, D, C | ThreeEighthNote, D | FullNote, D | QuarterNote, E, D | QuarterNote, E, D, C, A | HalfNote, A | FullNote, TheEnd};
+unsigned char maryHadALittleLamb[] = {B, A, G, A, B, B, B | QuarterNote, A, A, A | QuarterNote, B, C, C | QuarterNote, B, A, G, A, B, B, B | QuarterNote, A, A, B, A, G | QuarterNote, G | HalfNote, TheEnd};
+//unsigned char *songs[] = {maryHadALittleLamb, westworldTheme};
+unsigned char *songs[] = {testOctaveUp, testOctaveDown, testRest};
 unsigned int currentSongIndex = 0;
 
 void playTestSounds()
 {
-    unsigned int *song = songs[currentSongIndex];
+    unsigned char *song = songs[currentSongIndex];
     unsigned int i = 0;
     while (song[i] != TheEnd || i > MAX_SONG_LENGTH)
         playNote(song[i++]);
