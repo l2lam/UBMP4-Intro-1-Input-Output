@@ -34,7 +34,7 @@ void transmitMessage()
 {
     currentSenderState = Transmitting;
     currentMessageIndex = 0;
-    makeSound(600, 50, 4);
+    makeMultipleSound(600, 50, 4);
 }
 void pushToMessage(char c)
 {
@@ -53,12 +53,12 @@ void checkForSenderStateChange()
         case Transmitting:
             currentSenderState = AcceptingInput;
             FLASH_2_LEDS(4, 6, UNIT_LENGTH_MS);
-            makeSound(500, 100, 2);
+            makeMultipleSound(500, 100, 2);
             break;
         case AcceptingInput:
             currentSenderState = Transmitting;
             FLASH_2_LEDS(5, 6, UNIT_LENGTH_MS);
-            makeSound(800, 100, 3);
+            makeMultipleSound(800, 100, 3);
             break;
         }
         currentMessageIndex = 0;

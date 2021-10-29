@@ -1,6 +1,6 @@
 // This magic number is used to scale the calculated period of a note down
 // in order to make the sound audible.
-unsigned int PERIOD_SCALE = 70;
+unsigned int PERIOD_SCALE = 5000;
 
 // We use lower 5 bits of an integer to encode the note
 #define MUSICAL_NOTE_BITS 5
@@ -43,7 +43,7 @@ enum MusicalNoteLength
 };
 // This is the duration of a quarter note expressed in program-execution cycles.
 // The actual duration of the note played will depend on the processor speed/frequency.
-unsigned int EIGHTH_NOTE_DURATION_CYCLES = 700;
+unsigned long EIGHTH_NOTE_DURATION_CYCLES = 50000;
 
 /**
  * Play a musical note
@@ -56,9 +56,14 @@ void playNote(char notePlus);
 /**
  * Make a noise on the buzzer with the given params a number of times (nTimes)
  **/
-void makeSound(unsigned int cycles, unsigned long period, unsigned int nTimes);
+void makeSound(unsigned long cycles, unsigned long period);
 
-unsigned int MORSE_CODE_DOT_PERIOD = 80000;
+/**
+ * Make a noise multiple times with a small delay between them
+ **/
+void makeMultipleSound(unsigned long cycles, unsigned long period, unsigned char nTimes);
+
+unsigned long MORSE_CODE_DOT_PERIOD = 40000;
 //#define MORSE_CODE_DOT_PERIOD 60000
 #define MORSE_CODE_DOT_CYCLES 200
 
