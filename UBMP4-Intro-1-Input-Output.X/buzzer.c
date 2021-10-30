@@ -8,7 +8,7 @@
 #define MAX(x, y) x < y ? y : x
 unsigned long pow(unsigned long x, char y)
 {
-    long result = 1;
+    unsigned long result = 1;
     for (char i = 0; i < y; i++)
         result *= x;
     return result;
@@ -78,43 +78,32 @@ void makeMultipleSound(unsigned long cycles, unsigned long period, unsigned char
     }
 }
 
-#define FREQUENCE_SCALE 1000
-#define CLOCK_FREQ 48000000 // * FREQUENCY_SCALE ... doing this to avoid large numbers
+#define CLOCK_FREQ 48000000
+unsigned long lowerNotePeriods[] = {
+    // These period values must align with the MusicalNote indexes
+    // Note frequency values attained from https://pages.mtu.edu/~suits/notefreqs.html
+    // The period is calculated by dividing the clock frequency the by note frequency
+    CLOCK_FREQ / 1635 * 100, // C
+    CLOCK_FREQ / 1732 * 100, // Cs
+    CLOCK_FREQ / 1835 * 100, // D
+    CLOCK_FREQ / 1945 * 100, // Ds
+    CLOCK_FREQ / 2060 * 100, // E
+    CLOCK_FREQ / 2183 * 100, // F
+    CLOCK_FREQ / 2312 * 100, // Fs
+    CLOCK_FREQ / 2450 * 100, // G
+    CLOCK_FREQ / 2596 * 100, // Gs
+    CLOCK_FREQ / 2750 * 100, // A
+    CLOCK_FREQ / 2914 * 100, // As
+    CLOCK_FREQ / 3087 * 100, // B
+};
+
 void playNote(char notePlus)
 {
     enum MusicalNote note = notePlus & MUSICAL_NOTE_MASK;
-    unsigned long scalingValue = 0, frequency = 0, period = 0;
+    unsigned long period = 0;
 
     switch (note)
     {
-    case C:
-        frequency = 33;
-        period = CLOCK_FREQ / 33; // * FREQUENCE_SCALE; //1454545;
-        break;
-    case D:
-        frequency = 37;
-        period = CLOCK_FREQ / 37; // * FREQUENCE_SCALE; // 1297297; // clock frequency divided by note frequency
-        break;
-    case E:
-        frequency = 41;
-        period = CLOCK_FREQ / 41; // * FREQUENCE_SCALE; // 1170731;
-        break;
-    case F:
-        frequency = 44;
-        period = CLOCK_FREQ / 44; // * FREQUENCE_SCALE; // 1090909;
-        break;
-    case G:
-        frequency = 49;
-        period = CLOCK_FREQ / 49; //  * FREQUENCE_SCALE;
-        break;
-    case A:
-        frequency = 55;
-        period = CLOCK_FREQ / 55; //  * FREQUENCE_SCALE;
-        break;
-    case B:
-        frequency = 62;
-        period = CLOCK_FREQ / 62; //  * FREQUENCE_SCALE;
-        break;
     case Ou:
         currentOctave = MIN(MAX_OCTAVE, currentOctave + 1);
         return;
@@ -124,9 +113,15 @@ void playNote(char notePlus)
     case Or:
         currentOctave = DEFAULT_OCTAVE;
         return;
-    default:
-        // REST and unsupported notes
+    case Rest:
+        // It shouldn't matter what the period is, as long as the total cycles normalizes to the proper
+        // note length.  We just want the Rest to be silent for the correct length of time.
         period = CLOCK_FREQ / 62;
+        break;
+    default:
+        if (note <= B)
+            period = lowerNotePeriods[note];
+        break;
     }
 
     enum MusicalNoteLength noteLength = notePlus & ~MUSICAL_NOTE_MASK;
@@ -171,13 +166,18 @@ void playMorseCodeDashSound()
 }
 
 #define MAX_SONG_LENGTH 100
-unsigned char testScale[] = {Or, A | FullNote, B | FullNote, Ou, C | FullNote, D | FullNote, E | FullNote, D | FullNote, C | FullNote, Od, B | FullNote, A | FullNote, TheEnd};
-unsigned char testOctaveUp[] = {Or, C | HalfNote, Ou, C | HalfNote, Ou, C | HalfNote, Ou, C | HalfNote, Ou, C | HalfNote, TheEnd};
-unsigned char testOctaveDown[] = {C | FullNote, Od, C | FullNote, Od, C | FullNote, TheEnd};
-unsigned char testRest[] = {C, Rest, C | QuarterNote, Rest | QuarterNote, C | FullNote, Rest | FullNote, C | FullNote, TheEnd};
-unsigned char westworldTheme[] = {Or, Ou, Ou, E | QuarterNote, F, E | QuarterNote, F, E, D, C | ThreeEighthNote, D | FullNote, D | QuarterNote, E, D | QuarterNote, E, D, C, Od, G | HalfNote, Ou, A | FullNote, TheEnd};
-unsigned char maryHadALittleLamb[] = {Or, Ou, Ou, B, A, G, A, B, B, B | QuarterNote, A, A, A | QuarterNote, B, Ou, C, C | QuarterNote, Rest | QuarterNote, Od, B, A, G, A, B, B, B | QuarterNote, A, A, B, A, G | QuarterNote, G | HalfNote, TheEnd};
-unsigned char *songs[] = {maryHadALittleLamb, westworldTheme};
+//unsigned char testScale[] = {Or, A | FullNote, B | FullNote, Ou, C | FullNote, D | FullNote, E | FullNote, D | FullNote, C | FullNote, Od, B | FullNote, A | FullNote, TheEnd};
+//unsigned char testOctaveUp[] = {Or, C | HalfNote, Ou, C | HalfNote, Ou, C | HalfNote, Ou, C | HalfNote, Ou, C | HalfNote, TheEnd};
+//unsigned char testOctaveDown[] = {Or, C | FullNote, Od, C | FullNote, Od, C | FullNote, TheEnd};
+//unsigned char testRest[] = {Or, C, Rest, C | QuarterNote, Rest | QuarterNote, C | FullNote, Rest | FullNote, C | FullNote, TheEnd};
+unsigned char westworldTheme[] = {Or, E | QuarterNote, F, E | QuarterNote, F, E, D, C | ThreeEighthNote, D | FullNote, D | QuarterNote, E, D | QuarterNote, E, D, C, Od, G | HalfNote, Ou, A | FullNote, TheEnd};
+unsigned char maryHadALittleLamb[] = {Or, B, A, G, A, B, B, B | QuarterNote, A, A, A | QuarterNote, B, Ou, D, D | QuarterNote, Rest | QuarterNote, Od, B, A, G, A, B, B, B | QuarterNote, A, A, B, A, G | QuarterNote, G | HalfNote, TheEnd};
+unsigned char furElise[] = {Or, E, Ds, E, Ds, E, Od, B, Ou, D, C, Od, A | QuarterNote, Rest,
+                            C, E, A, B | QuarterNote, Rest, E, Gs, B, Ou, C | QuarterNote, Rest,
+                            Od, E, Ou, E, Ds, E, Ds, E, Od, B, Ou, D, C, Od, A | QuarterNote, Rest,
+                            C, E, A, B | QuarterNote, Rest, E, Ou, C, Od, B, A | HalfNote, Rest,
+                            TheEnd};
+unsigned char *songs[] = {furElise, maryHadALittleLamb, westworldTheme};
 //unsigned char *songs[] = {testScale, testOctaveUp}; //, maryHadALittleLamb, westworldTheme};
 unsigned int currentSongIndex = 0;
 

@@ -9,20 +9,25 @@ unsigned int PERIOD_SCALE = 1000;
 #define MUSICAL_NOTE_MASK 0b00011111
 
 // Octave configuration
-#define DEFAULT_OCTAVE 1
+#define DEFAULT_OCTAVE 4
 #define MAX_OCTAVE 8
 char currentOctave = DEFAULT_OCTAVE;
 
 // Here are the enumerated values for the notes for convenience
 enum MusicalNote
 {
-    A,
-    B,
-    C,
+    C = 0,
+    Cs, // C sharp or D flat
     D,
+    Ds,
     E,
     F,
+    Fs,
     G,
+    Gs,
+    A,
+    As,
+    B,
     Rest,
     TheEnd, // this flag can be used to signal the end of a song
     Ou,     // this flag signals to move up one octave

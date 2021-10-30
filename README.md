@@ -1,6 +1,6 @@
 # What is this project about?
 
-This is a sample project using Microchip's MPLAB X IDE to demonstrate basic control of circuit components that on a [UBMP4](https://mirobo.tech) circuit board.
+This is a sample project using Microchip's MPLAB X IDE to demonstrate basic control of circuit components on a [UBMP4](https://mirobo.tech) circuit board.
 The program is a [Morse Code](https://en.wikipedia.org/wiki/Morse_code) Receiver and Transmitter. Buttons are used for mode switching and data input. Output is done via LEDs, speaker and eventually, an IR transmitter. At some point an IR receiver could also be used for input.
 
 # Who is this project for?
