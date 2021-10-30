@@ -1,6 +1,6 @@
 // This magic number is used to scale the calculated period of a note down
 // in order to make the sound audible.
-unsigned int PERIOD_SCALE = 5000;
+unsigned int PERIOD_SCALE = 1000;
 
 // We use lower 5 bits of an integer to encode the note
 #define MUSICAL_NOTE_BITS 5

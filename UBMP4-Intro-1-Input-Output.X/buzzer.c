@@ -6,6 +6,13 @@
 
 #define MIN(x, y) x < y ? x : y
 #define MAX(x, y) x < y ? y : x
+unsigned long pow(unsigned long x, char y)
+{
+    long result = 1;
+    for (char i = 0; i < y; i++)
+        result *= x;
+    return result;
+}
 
 // This is the definition of a function pointer type; so that we can pass in different functions to calculate
 // the period given the current position in the cycle, the total # of cycles and the max period.
@@ -35,7 +42,7 @@ unsigned long valleyPeriod(unsigned int cycleIndex, unsigned long totalCycles, u
     unsigned long halfCycle = totalCycles / 2;
     unsigned long mainPart = cycleIndex - halfCycle;
 
-    return mainPart * mainPart * maxPeriod / (halfCycle * halfCycle);
+    return pow(mainPart, 2) * maxPeriod / pow(halfCycle, 2);
 }
 
 // Returns the opposite of the valleyPeriod
@@ -147,7 +154,7 @@ void playNote(char notePlus)
     // We need to adjust the period by the octave (and a preferred scaling value)
     // Also, we want the note to play for the precise length of time regardless of the period
     // so we have to adjust the number of cycles by the period
-    unsigned long adjustedPeriod = period * currentOctave / PERIOD_SCALE;
+    unsigned long adjustedPeriod = period / pow(2, currentOctave) / PERIOD_SCALE;
     _makeSound(length / adjustedPeriod, adjustedPeriod, constantPeriod, note == Rest ? true : false);
 
     __delay_ms(50);
@@ -164,13 +171,14 @@ void playMorseCodeDashSound()
 }
 
 #define MAX_SONG_LENGTH 100
-unsigned char testOctaveUp[] = {C | FullNote, Ou, C | FullNote, Ou, C | FullNote, TheEnd};
+unsigned char testScale[] = {Or, A | FullNote, B | FullNote, Ou, C | FullNote, D | FullNote, E | FullNote, D | FullNote, C | FullNote, Od, B | FullNote, A | FullNote, TheEnd};
+unsigned char testOctaveUp[] = {Or, C | HalfNote, Ou, C | HalfNote, Ou, C | HalfNote, Ou, C | HalfNote, Ou, C | HalfNote, TheEnd};
 unsigned char testOctaveDown[] = {C | FullNote, Od, C | FullNote, Od, C | FullNote, TheEnd};
 unsigned char testRest[] = {C, Rest, C | QuarterNote, Rest | QuarterNote, C | FullNote, Rest | FullNote, C | FullNote, TheEnd};
-unsigned char westworldTheme[] = {E | QuarterNote, F, E | QuarterNote, F, E, D, C | ThreeEighthNote, D | FullNote, D | QuarterNote, E, D | QuarterNote, E, D, C, Od, G | HalfNote, Ou, A | FullNote, TheEnd};
-unsigned char maryHadALittleLamb[] = {B, A, G, A, B, B, B | QuarterNote, A, A, A | QuarterNote, B, C, C | QuarterNote, Rest | QuarterNote, B, A, G, A, B, B, B | QuarterNote, A, A, B, A, G | QuarterNote, G | HalfNote, TheEnd};
-//unsigned char *songs[] = {maryHadALittleLamb, westworldTheme};
-unsigned char *songs[] = {testOctaveUp, testOctaveDown, testRest, maryHadALittleLamb};
+unsigned char westworldTheme[] = {Or, Ou, Ou, E | QuarterNote, F, E | QuarterNote, F, E, D, C | ThreeEighthNote, D | FullNote, D | QuarterNote, E, D | QuarterNote, E, D, C, Od, G | HalfNote, Ou, A | FullNote, TheEnd};
+unsigned char maryHadALittleLamb[] = {Or, Ou, Ou, B, A, G, A, B, B, B | QuarterNote, A, A, A | QuarterNote, B, Ou, C, C | QuarterNote, Rest | QuarterNote, Od, B, A, G, A, B, B, B | QuarterNote, A, A, B, A, G | QuarterNote, G | HalfNote, TheEnd};
+unsigned char *songs[] = {maryHadALittleLamb, westworldTheme};
+//unsigned char *songs[] = {testScale, testOctaveUp}; //, maryHadALittleLamb, westworldTheme};
 unsigned int currentSongIndex = 0;
 
 void playTestSounds()
