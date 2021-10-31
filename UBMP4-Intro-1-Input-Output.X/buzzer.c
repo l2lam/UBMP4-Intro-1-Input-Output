@@ -165,7 +165,7 @@ void playMorseCodeDashSound()
     _makeSound(MORSE_CODE_DOT_CYCLES * 3, MORSE_CODE_DOT_PERIOD / PERIOD_SCALE, &valleyPeriod, false);
 }
 
-#define MAX_SONG_LENGTH 100
+#define MAX_SONG_LENGTH 200
 //unsigned char testScale[] = {Or, A | FullNote, B | FullNote, Ou, C | FullNote, D | FullNote, E | FullNote, D | FullNote, C | FullNote, Od, B | FullNote, A | FullNote, TheEnd};
 //unsigned char testOctaveUp[] = {Or, C | HalfNote, Ou, C | HalfNote, Ou, C | HalfNote, Ou, C | HalfNote, Ou, C | HalfNote, TheEnd};
 //unsigned char testOctaveDown[] = {Or, C | FullNote, Od, C | FullNote, Od, C | FullNote, TheEnd};
@@ -173,9 +173,20 @@ void playMorseCodeDashSound()
 unsigned char westworldTheme[] = {Or, E | QuarterNote, F, E | QuarterNote, F, E, D, C | ThreeEighthNote, D | FullNote, D | QuarterNote, E, D | QuarterNote, E, D, C, Od, G | HalfNote, Ou, A | FullNote, TheEnd};
 unsigned char maryHadALittleLamb[] = {Or, B, A, G, A, B, B, B | QuarterNote, A, A, A | QuarterNote, B, Ou, D, D | QuarterNote, Rest | QuarterNote, Od, B, A, G, A, B, B, B | QuarterNote, A, A, B, A, G | QuarterNote, G | HalfNote, TheEnd};
 unsigned char furElise[] = {Or, E, Ds, E, Ds, E, Od, B, Ou, D, C, Od, A | QuarterNote, Rest,
-                            C, E, A, B | QuarterNote, Rest, E, Gs, B, Ou, C | QuarterNote, Rest,
+                            C, E, A, B | QuarterNote, Rest,
+                            E, Gs, B, Ou, C | QuarterNote, Rest,
                             Od, E, Ou, E, Ds, E, Ds, E, Od, B, Ou, D, C, Od, A | QuarterNote, Rest,
-                            C, E, A, B | QuarterNote, Rest, E, Ou, C, Od, B, A | HalfNote, Rest,
+                            C, E, A, B | QuarterNote, Rest,
+                            E, Ou, C, Od, B, A | QuarterNote,
+                            B, Ou, C, D, E | QuarterNote, Rest,
+                            Od, G, Ou, F, E, D | QuarterNote, Rest,
+                            Od, F, Ou, E, D, C | QuarterNote, Rest,
+                            Od, E, Ou, D, C, Od, B | SixEighthNote, Rest | HalfNote,
+                            Ou, E, Ds, E, Ds, E, Od, B, Ou, D, C, Od, A | QuarterNote, Rest,
+                            C, E, A, B | QuarterNote, Rest,
+                            E, Gs, B, Ou, C | QuarterNote, Rest,
+                            Od, E, Ou, E, Ds, E, Ds, E, Od, B, Ou, D, C, Od, A | QuarterNote, Rest,
+                            C, E, A, B | QuarterNote, Rest, E, Ou, C, Od, B, A | SixEighthNote, Rest | HalfNote,
                             TheEnd};
 unsigned char *songs[] = {furElise, maryHadALittleLamb, westworldTheme};
 //unsigned char *songs[] = {testScale, testOctaveUp}; //, maryHadALittleLamb, westworldTheme};
