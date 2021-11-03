@@ -24,6 +24,17 @@ unsigned long constantPeriod(unsigned int cycleIndex, unsigned long totalCycles,
     return maxPeriod;
 }
 
+// Returns a period that starts and ends high but is constant at maxPeriod in the middle
+unsigned long bowlPeriod(unsigned int cycleIndex, unsigned long totalCycles, unsigned long maxPeriod)
+{
+    unsigned long margin = totalCycles / 80; // 1.25% of the cycle length
+    if (cycleIndex < margin)
+        return maxPeriod + margin - cycleIndex;
+    if (cycleIndex > totalCycles - margin)
+        return maxPeriod + margin - totalCycles + cycleIndex;
+    return maxPeriod;
+}
+
 // Returns a period that rises as the cycleIndex rises (linear)
 unsigned long risingPeriod(unsigned int cycleIndex, unsigned long totalCycles, unsigned long maxPeriod)
 {
@@ -40,7 +51,7 @@ unsigned long fallingPeriod(unsigned int cycleIndex, unsigned long totalCycles, 
 unsigned long valleyPeriod(unsigned int cycleIndex, unsigned long totalCycles, unsigned long maxPeriod)
 {
     unsigned long halfCycle = totalCycles / 2;
-    unsigned long mainPart = cycleIndex - halfCycle;
+    unsigned long mainPart = halfCycle > cycleIndex ? halfCycle - cycleIndex : cycleIndex - halfCycle;
 
     return pow(mainPart, 2) * maxPeriod / pow(halfCycle, 2);
 }
@@ -150,7 +161,7 @@ void playNote(char notePlus)
     // Also, we want the note to play for the precise length of time regardless of the period
     // so we have to adjust the number of cycles by the period
     unsigned long adjustedPeriod = period / pow(2, currentOctave) / PERIOD_SCALE;
-    _makeSound(length / adjustedPeriod, adjustedPeriod, constantPeriod, note == Rest ? true : false);
+    _makeSound(length / adjustedPeriod, adjustedPeriod, &constantPeriod, note == Rest ? true : false);
 
     __delay_ms(50);
 }
