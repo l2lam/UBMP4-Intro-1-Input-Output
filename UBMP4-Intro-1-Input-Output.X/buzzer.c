@@ -172,12 +172,13 @@ void playMorseCodeDashSound()
 //unsigned char testRest[] = {Or, C, Rest, C | QuarterNote, Rest | QuarterNote, C | FullNote, Rest | FullNote, C | FullNote, TheEnd};
 unsigned char westworldTheme[] = {Or, E | QuarterNote, F, E | QuarterNote, F, E, D, C | ThreeEighthNote, D | FullNote, D | QuarterNote, E, D | QuarterNote, E, D, C, Od, G | HalfNote, Ou, A | FullNote, TheEnd};
 unsigned char maryHadALittleLamb[] = {Or, B, A, G, A, B, B, B | QuarterNote, A, A, A | QuarterNote, B, Ou, D, D | QuarterNote, Rest | QuarterNote, Od, B, A, G, A, B, B, B | QuarterNote, A, A, B, A, G | QuarterNote, G | HalfNote, TheEnd};
-unsigned char furElise[] = {Or, E, Ds, E, Ds, E, Od, B, Ou, D, C, Od, A | QuarterNote, Rest,
+unsigned char furElise[] = {Or,
+                            E, Ds, E, Ds, E, Od, B, Ou, D, C, Od, A | QuarterNote, Rest,
                             C, E, A, B | QuarterNote, Rest,
                             E, Gs, B, Ou, C | QuarterNote, Rest,
                             Od, E, Ou, E, Ds, E, Ds, E, Od, B, Ou, D, C, Od, A | QuarterNote, Rest,
                             C, E, A, B | QuarterNote, Rest,
-                            E, Ou, C, Od, B, A | QuarterNote,
+                            E, Ou, C, Od, B, A | QuarterNote, Rest,
                             B, Ou, C, D, E | QuarterNote, Rest,
                             Od, G, Ou, F, E, D | QuarterNote, Rest,
                             Od, F, Ou, E, D, C | QuarterNote, Rest,
@@ -188,7 +189,18 @@ unsigned char furElise[] = {Or, E, Ds, E, Ds, E, Od, B, Ou, D, C, Od, A | Quarte
                             Od, E, Ou, E, Ds, E, Ds, E, Od, B, Ou, D, C, Od, A | QuarterNote, Rest,
                             C, E, A, B | QuarterNote, Rest, E, Ou, C, Od, B, A | SixEighthNote, Rest | HalfNote,
                             TheEnd};
-unsigned char *songs[] = {furElise, maryHadALittleLamb, westworldTheme};
+unsigned char elCondorPasa[] = {Or,
+                                Od, B, Ou, E, Ds, E, Fs, G, Fs, G, A, B | HalfNote, Rest | QuarterNote,
+                                Ou, D, D | QuarterNote, Od, B | HalfNote, Rest | QuarterNote,
+                                Ou, E, D | QuarterNote, Od, B | HalfNote, Rest,
+                                B, A, G, A, G, E | HalfNote, Rest,
+                                B, A, G, E | ThreeEighthNote, Rest | QuarterNote, Rest,
+                                Od, B, Ou, E, Ds, E, Fs, G, Fs, G, A, B | QuarterNote, A, G | QuarterNote, Rest | QuarterNote,
+                                Ou, E, D | QuarterNote, Od, B | HalfNote, Rest,
+                                Ou, E, D, E | QuarterNote, D, E, D, Od, B | ThreeEighthNote, Rest,
+                                B, A, G, A, G, E | HalfNote, Rest,
+                                TheEnd};
+unsigned char *songs[] = {elCondorPasa, maryHadALittleLamb, westworldTheme, furElise};
 //unsigned char *songs[] = {testScale, testOctaveUp}; //, maryHadALittleLamb, westworldTheme};
 unsigned int currentSongIndex = 0;
 
