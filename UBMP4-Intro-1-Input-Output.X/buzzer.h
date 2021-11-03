@@ -48,7 +48,7 @@ enum MusicalNoteLength
 };
 // This is the duration of a quarter note expressed in program-execution cycles.
 // The actual duration of the note played will depend on the processor speed/frequency.
-unsigned long EIGHTH_NOTE_DURATION_CYCLES = 50000;
+unsigned long EIGHTH_NOTE_DURATION_CYCLES = 70000;
 
 /**
  * Play a musical note
