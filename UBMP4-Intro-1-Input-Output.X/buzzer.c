@@ -130,22 +130,21 @@ unsigned long lowerNotePeriods[] = {
     CLOCK_FREQ / 3087 * 100, // B
 };
 
-unsigned long calculateNotePeriod(char notePlus)
+unsigned long calculateNotePeriod(enum MusicalNote note)
 {
-    enum MusicalNote note = notePlus & MUSICAL_NOTE_MASK;
     unsigned long period = 0;
 
     switch (note)
     {
     case Ou:
         currentOctave = MIN(MAX_OCTAVE, currentOctave + 1);
-        return;
+        return 0;
     case Od:
         currentOctave = MAX(1, currentOctave - 1);
-        return;
+        return 0;
     case Or:
         currentOctave = DEFAULT_OCTAVE;
-        return;
+        return 0;
     case Rest:
         // It shouldn't matter what the period is, as long as the total cycles normalizes to the proper
         // note length.  We just want the Rest to be silent for the correct length of time.
@@ -162,7 +161,7 @@ unsigned long calculateNotePeriod(char notePlus)
     return adjustedPeriod;
 }
 
-unsigned long calculateNoteLength(char notePlus)
+unsigned long calculateNoteLength(unsigned char notePlus)
 {
     enum MusicalNoteLength noteLength = notePlus & ~MUSICAL_NOTE_MASK;
     unsigned long length = EIGHTH_NOTE_DURATION_CYCLES;
@@ -188,18 +187,22 @@ unsigned long calculateNoteLength(char notePlus)
     return length;
 }
 
-void playNote(char notePlus)
+void playNote(unsigned char notePlus)
 {
-    unsigned long period = calculateNotePeriod(notePlus);
-    unsigned long length = calculateNoteLength(notePlus);
+    enum MusicalNote note = notePlus & MUSICAL_NOTE_MASK;
+    unsigned long period = calculateNotePeriod(note);
+    if (period > 0)
+    {
+        unsigned long length = calculateNoteLength(notePlus);
 
-    // We want the note to play for the precise length of time regardless of the period
-    // so we have to adjust the number of cycles by the period
-    _makeSound(length / period, period, &constantPeriod, note == Rest ? true : false);
+        // We want the note to play for the precise length of time regardless of the period
+        // so we have to adjust the number of cycles by the period
+        _makeSound(length / period, period, &constantPeriod, note == Rest ? true : false);
+    }
 }
 
 const char chordChunks = 10;
-void playChord(char notePluses[])
+void playChord(unsigned char notePluses[])
 {
     // To play a cord we're going to use the first note's duration and splice all the notes into that duration to simulate simultaneous notes being played
     char nNotes = sizeof(notePluses) / sizeof(notePluses[0]);
@@ -208,8 +211,10 @@ void playChord(char notePluses[])
     unsigned long lengthPerChunk = length / nChunks;
     for (int i = 0; i < nChunks; i++)
     {
-        unsigned long period = calculateNotePeriod(notePluses[i]);
-        _makeSound(lengthPerChunk / period, period, &constantPeriod, false);
+        enum MusicalNote note = notePluses[i] & MUSICAL_NOTE_MASK;
+        unsigned long period = calculateNotePeriod(note);
+        if (period > 0)
+            _makeSound(lengthPerChunk / period, period, &constantPeriod, false);
     }
 }
 
