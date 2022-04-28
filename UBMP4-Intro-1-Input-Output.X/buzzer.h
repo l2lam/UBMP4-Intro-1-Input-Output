@@ -56,8 +56,8 @@ unsigned long EIGHTH_NOTE_DURATION_CYCLES = 70000;
  * @param notePlus a combined value that represent the MusicalNote and MusicalNoteLength.
  * For example, a half note G can be encoded as notePlus = G | HalfNote
  */
-void playNote(char notePlus);
-void playChord(char notePluses[]);
+void playNote(unsigned char notePlus);
+void playChord(unsigned char notePluses[]);
 unsigned char cMajor[] = {C, E, G};
 unsigned char dMajor[] = {D, Fs, A};
 unsigned char eMajor[] = {E, Gs, B};
