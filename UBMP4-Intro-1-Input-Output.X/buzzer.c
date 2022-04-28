@@ -89,6 +89,28 @@ void makeMultipleSound(unsigned long cycles, unsigned long period, unsigned char
     }
 }
 
+#ifdef MANUAL_CHORDS
+int chordChunks = 10;
+void _makeChordSound(unsigned long cycles, unsigned long periods[])
+{
+    // Divide the cycles into chunks and repeat the periods to simulate a chord
+    char nNotes = sizeof(periods) / sizeof(periods[0]);
+    char nChunks = chordChunks * nNotes;
+    unsigned long cyclesPerChunk = cycles / nChunks;
+    for (int i = 0; i < nChunks; i++)
+    {
+        unsigned long period = period[i % nNotes];
+        for (unsigned int c = 0; c < cyclesPerChunk; c++)
+        {
+            if (!silent)
+                BEEPER = !BEEPER;
+            for (unsigned long p = 0; p < period; p++)
+                ;
+        }
+    }
+}
+#endif
+
 #define CLOCK_FREQ 48000000
 unsigned long lowerNotePeriods[] = {
     // These period values must align with the MusicalNote indexes
@@ -108,7 +130,7 @@ unsigned long lowerNotePeriods[] = {
     CLOCK_FREQ / 3087 * 100, // B
 };
 
-void playNote(char notePlus)
+unsigned long calculateNotePeriod(char notePlus)
 {
     enum MusicalNote note = notePlus & MUSICAL_NOTE_MASK;
     unsigned long period = 0;
@@ -135,6 +157,13 @@ void playNote(char notePlus)
         break;
     }
 
+    // We need to adjust the period by the octave (and a preferred scaling value)
+    unsigned long adjustedPeriod = period / pow(2, currentOctave) / PERIOD_SCALE;
+    return adjustedPeriod;
+}
+
+unsigned long calculateNoteLength(char notePlus)
+{
     enum MusicalNoteLength noteLength = notePlus & ~MUSICAL_NOTE_MASK;
     unsigned long length = EIGHTH_NOTE_DURATION_CYCLES;
 
@@ -156,14 +185,32 @@ void playNote(char notePlus)
         length = length * 8;
         break;
     }
+    return length;
+}
 
-    // We need to adjust the period by the octave (and a preferred scaling value)
-    // Also, we want the note to play for the precise length of time regardless of the period
+void playNote(char notePlus)
+{
+    unsigned long period = calculateNotePeriod(notePlus);
+    unsigned long length = calculateNoteLength(notePlus);
+
+    // We want the note to play for the precise length of time regardless of the period
     // so we have to adjust the number of cycles by the period
-    unsigned long adjustedPeriod = period / pow(2, currentOctave) / PERIOD_SCALE;
-    _makeSound(length / adjustedPeriod, adjustedPeriod, &constantPeriod, note == Rest ? true : false);
+    _makeSound(length / period, period, &constantPeriod, note == Rest ? true : false);
+}
 
-    __delay_ms(50);
+const char chordChunks = 10;
+void playChord(char notePluses[])
+{
+    // To play a cord we're going to use the first note's duration and splice all the notes into that duration to simulate simultaneous notes being played
+    char nNotes = sizeof(notePluses) / sizeof(notePluses[0]);
+    char nChunks = chordChunks * nNotes;
+    unsigned long length = calculateNoteLength(notePluses[0]);
+    unsigned long lengthPerChunk = length / nChunks;
+    for (int i = 0; i < nChunks; i++)
+    {
+        unsigned long period = calculateNotePeriod(notePluses[i]);
+        _makeSound(lengthPerChunk / period, period, &constantPeriod, false);
+    }
 }
 
 void playMorseCodeDotSound()
@@ -177,10 +224,10 @@ void playMorseCodeDashSound()
 }
 
 #define MAX_SONG_LENGTH 200
-//unsigned char testScale[] = {Or, A | FullNote, B | FullNote, Ou, C | FullNote, D | FullNote, E | FullNote, D | FullNote, C | FullNote, Od, B | FullNote, A | FullNote, TheEnd};
-//unsigned char testOctaveUp[] = {Or, C | HalfNote, Ou, C | HalfNote, Ou, C | HalfNote, Ou, C | HalfNote, Ou, C | HalfNote, TheEnd};
-//unsigned char testOctaveDown[] = {Or, C | FullNote, Od, C | FullNote, Od, C | FullNote, TheEnd};
-//unsigned char testRest[] = {Or, C, Rest, C | QuarterNote, Rest | QuarterNote, C | FullNote, Rest | FullNote, C | FullNote, TheEnd};
+// unsigned char testScale[] = {Or, A | FullNote, B | FullNote, Ou, C | FullNote, D | FullNote, E | FullNote, D | FullNote, C | FullNote, Od, B | FullNote, A | FullNote, TheEnd};
+// unsigned char testOctaveUp[] = {Or, C | HalfNote, Ou, C | HalfNote, Ou, C | HalfNote, Ou, C | HalfNote, Ou, C | HalfNote, TheEnd};
+// unsigned char testOctaveDown[] = {Or, C | FullNote, Od, C | FullNote, Od, C | FullNote, TheEnd};
+// unsigned char testRest[] = {Or, C, Rest, C | QuarterNote, Rest | QuarterNote, C | FullNote, Rest | FullNote, C | FullNote, TheEnd};
 unsigned char westworldTheme[] = {Or, E | QuarterNote, F, E | QuarterNote, F, E, D, C | ThreeEighthNote, D | FullNote, D | QuarterNote, E, D | QuarterNote, E, D, C, Od, G | HalfNote, Ou, A | FullNote, TheEnd};
 unsigned char maryHadALittleLamb[] = {Or, B, A, G, A, B, B, B | QuarterNote, A, A, A | QuarterNote, B, Ou, D, D | QuarterNote, Rest | QuarterNote, Od, B, A, G, A, B, B, B | QuarterNote, A, A, B, A, G | QuarterNote, G | HalfNote, TheEnd};
 unsigned char furElise[] = {Or,
@@ -212,7 +259,7 @@ unsigned char elCondorPasa[] = {Or,
                                 B, A, G, A, G, E | HalfNote, Rest,
                                 TheEnd};
 unsigned char *songs[] = {elCondorPasa, maryHadALittleLamb, westworldTheme, furElise};
-//unsigned char *songs[] = {testScale, testOctaveUp}; //, maryHadALittleLamb, westworldTheme};
+// unsigned char *songs[] = {testScale, testOctaveUp}; //, maryHadALittleLamb, westworldTheme};
 unsigned int currentSongIndex = 0;
 
 void playTestSounds()
@@ -220,7 +267,10 @@ void playTestSounds()
     unsigned char *song = songs[currentSongIndex];
     unsigned char i = 0;
     while (song[i] != TheEnd && i < MAX_SONG_LENGTH)
+    {
         playNote(song[i++]);
+        __delay_ms(50);
+    }
 
     currentSongIndex = (currentSongIndex + 1) % (sizeof(songs) / sizeof(songs[0]));
 }

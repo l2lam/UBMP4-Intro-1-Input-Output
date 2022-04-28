@@ -39,7 +39,7 @@ enum MusicalNote
 // Note that an eighth-note is the default length so does not need to expressed explicitly.
 enum MusicalNoteLength
 {
-    //EighthNote = 0 << MUSICAL_NOTE_BITS, // This the default
+    // EighthNote = 0 << MUSICAL_NOTE_BITS, // This the default
     QuarterNote = 1 << MUSICAL_NOTE_BITS,
     ThreeEighthNote = 2 << MUSICAL_NOTE_BITS,
     HalfNote = 3 << MUSICAL_NOTE_BITS,
@@ -52,11 +52,15 @@ unsigned long EIGHTH_NOTE_DURATION_CYCLES = 70000;
 
 /**
  * Play a musical note
- * 
- * @param notePlus a combined value that represent the MusicalNote and MusicalNoteLength.  
+ *
+ * @param notePlus a combined value that represent the MusicalNote and MusicalNoteLength.
  * For example, a half note G can be encoded as notePlus = G | HalfNote
  */
 void playNote(char notePlus);
+void playChord(char notePluses[]);
+unsigned char cMajor[] = {C, E, G};
+unsigned char dMajor[] = {D, Fs, A};
+unsigned char eMajor[] = {E, Gs, B};
 
 /**
  * Make a noise on the buzzer with the given params a number of times (nTimes)
@@ -83,6 +87,6 @@ void playMorseCodeDotSound();
 void playMorseCodeDashSound();
 
 /**
- * Play some test sounds 
+ * Play some test sounds
  */
 void playTestSounds();
