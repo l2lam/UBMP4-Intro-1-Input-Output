@@ -1,11 +1,11 @@
 /*==============================================================================
  Project: Intro-1-Input-Output
  Date:    May 16, 2021
- 
+
  This example UBMP4 input and output program demonstrates pushbutton input, LED
  (bit) output, port latch (byte) output, time delay functions, and simple 'if'
  condition structures.
- 
+
  Additional program analysis and programming activities demonstrate byte output,
  logical condition operators AND and OR, using delay functions to create sound,
  and simulated start-stop button functionality.
@@ -51,20 +51,28 @@ void processMode(enum modeType mode)
         else if (BUTTON_PRESSED(3))
         {
             FLASH_LED(4, UNIT_LENGTH_MS);
+#ifdef OLD
             PERIOD_SCALE -= 1;
             MORSE_CODE_DOT_PERIOD -= 10000;
             playMorseCodeDotSound();
             __delay_ms(200);
             playMorseCodeDashSound();
+#else
+            playChord(cMajor);
+#endif
         }
         else if (BUTTON_PRESSED(4))
         {
             FLASH_LED(5, UNIT_LENGTH_MS);
+#ifdef OLD
             PERIOD_SCALE += 1;
             MORSE_CODE_DOT_PERIOD += 10000;
             playMorseCodeDotSound();
             __delay_ms(200);
             playMorseCodeDashSound();
+#else
+            playNote(C);
+#endif
         }
         else if (BUTTON_PRESSED(5))
         {
